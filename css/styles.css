@@ -279,8 +279,9 @@ main {
 
 /* Profile Photo */
 .profile-photo {
-    width: 400px;
-    height: 400px;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
     object-fit: cover;
     border-radius: 50%;
     box-shadow: 0 4px 16px rgba(0,0,0,0.15);
