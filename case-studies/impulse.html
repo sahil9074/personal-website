@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impulse — Case Study | Sahilpreet Singh Bhola</title>
+<meta name="description" content="How I replaced a monthly Google Sheets budgeting ritual with Impulse — a React Native app with automatic bank sync via Plaid and a Supabase backend.">
+<link rel="icon" type="image/png" href="../assets/favicon-96x96.png">
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --border: #262b35;
+    --text: #e8e9ec;
+    --text-dim: #9aa0ac;
+    --accent: #6ee7b7;
+    --accent-dim: #34d399;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.65;
+  }
+  a { color: var(--accent-dim); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .backbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(15, 17, 21, 0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .backbar-inner {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 16px 24px;
+  }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-dim);
+    text-decoration: none;
+  }
+  .back-link:hover { color: var(--accent); }
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 56px 24px 120px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-size: 42px;
+    line-height: 1.15;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+  }
+  .subtitle {
+    font-size: 19px;
+    color: var(--text-dim);
+    margin: 0 0 32px;
+    max-width: 620px;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 56px;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    padding: 5px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+  }
+  h2 {
+    font-size: 22px;
+    margin: 56px 0 16px;
+    letter-spacing: -0.01em;
+  }
+  h2 .num {
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 15px;
+    margin-right: 10px;
+  }
+  p { color: var(--text); font-size: 16px; margin: 0 0 16px; }
+  p.dim { color: var(--text-dim); }
+  ul { margin: 0 0 16px; padding-left: 20px; }
+  li { margin-bottom: 8px; font-size: 16px; }
+  .callout {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 20px 0;
+    font-size: 15px;
+    color: var(--text-dim);
+  }
+  .callout strong { color: var(--text); }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .card h3 {
+    font-size: 15px;
+    margin: 0 0 8px;
+    color: var(--accent-dim);
+  }
+  .card p { font-size: 14.5px; margin: 0; color: var(--text-dim); }
+  .shot {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel);
+    overflow: hidden;
+    width: 100%;
+  }
+  .shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .shot-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 8px 0 16px;
+  }
+  .shot-caption {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 8px;
+  }
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 56px 0;
+  }
+  .results-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 20px 0 8px;
+  }
+  .stat { text-align: left; }
+  .stat .n {
+    font-family: var(--mono);
+    font-size: 26px;
+    color: var(--accent);
+    display: block;
+  }
+  .stat .l { font-size: 13px; color: var(--text-dim); }
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13.5px;
+    color: var(--text-dim);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .wrap { animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  }
+  @media (max-width: 600px) {
+    h1 { font-size: 30px; }
+    .grid-2, .results-row, .shot-row { grid-template-columns: 1fr; }
+    .wrap { padding: 32px 18px 80px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="backbar-inner">
+    <a href="../index.html#projects" class="back-link">&larr; Back to portfolio</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="eyebrow">Case Study — Personal Project</div>
+  <h1>Impulse</h1>
+  <p class="subtitle">A budgeting app that replaced my monthly Google Sheets ritual with automatic bank sync, real budgets, and zero manual data entry — built after 800+ people in my personal-finance community told me they had the same problem.</p>
+
+  <div class="meta">
+    <span class="tag">React Native (Expo)</span>
+    <span class="tag">Supabase</span>
+    <span class="tag">Plaid</span>
+    <span class="tag">Vercel</span>
+    <span class="tag">TypeScript</span>
+    <span class="tag">Solo Build</span>
+    <span class="tag">800+ Community</span>
+  </div>
+
+  <div class="shot-row">
+    <div>
+      <div class="shot"><img src="../assets/case-studies/impulse/home.webp" width="1600" height="770" alt="Impulse home dashboard showing total monthly budget, connect-a-bank prompt, and budget categories" loading="lazy"></div>
+      <div class="shot-caption">Home — budget overview</div>
+    </div>
+    <div>
+      <div class="shot"><img src="../assets/case-studies/impulse/transactions.webp" width="1600" height="772" alt="Impulse transactions screen with month selector, search, and category filters" loading="lazy"></div>
+      <div class="shot-caption">Transactions — search &amp; filter</div>
+    </div>
+    <div>
+      <div class="shot"><img src="../assets/case-studies/impulse/accounts.webp" width="1600" height="770" alt="Impulse accounts screen with linked institutions and link-a-bank action" loading="lazy"></div>
+      <div class="shot-caption">Accounts — linked institutions</div>
+    </div>
+    <div>
+      <div class="shot"><img src="../assets/case-studies/impulse/settings.webp" width="1600" height="774" alt="Impulse settings screen with account info, notification preferences, and sign out" loading="lazy"></div>
+      <div class="shot-caption">Settings — account &amp; preferences</div>
+    </div>
+  </div>
+
+  <h2><span class="num">01</span>The problem</h2>
+  <p>Every month I sat down with a Google Sheet, my bank's transaction export, and about an hour I didn't want to spend copy-pasting and re-categorizing purchases by hand. The spreadsheet worked, but it only worked if I kept feeding it — and I usually stopped by week three. I wanted something that pulled transactions automatically, kept a running budget by category, and required close to zero manual upkeep, while still feeling like <em>my</em> system rather than a generic budgeting app with features I'd never use.</p>
+
+  <h2><span class="num">02</span>Validating it beyond myself</h2>
+  <p>Before writing any code, I'd already been posting personal-finance breakdowns as <strong>sahiltalksfinance</strong>, a content account that grew to 800+ followers. The recurring theme in comments and DMs wasn't "I want nicer charts" — it was the exact fatigue I felt myself: people falling off their budget within a few weeks because keeping it updated took real effort. That pattern, showing up across dozens of people instead of just my own habit, is what turned Impulse from a personal script into a product decision.</p>
+  <p class="dim">I treated that audience as an ongoing, lightweight research channel — engagement analytics and recurring questions standing in for user interviews — and used it to decide what shipped first. Automatic bank sync went in before custom categories, recurring-bill detection, or any of the more interesting engineering problems, because the community signal made it clear that manual entry was the actual point of failure, not the feature set sitting on top of it.</p>
+
+  <h2><span class="num">03</span>Why Plaid</h2>
+  <p>The core requirement was reliable, ongoing access to transaction data across whatever banks I (and eventually other users) actually use — not a one-time CSV import. Three things made Plaid the right call over building a bank-scraping solution or using a lighter-weight aggregator:</p>
+  <ul>
+    <li><strong>Coverage and reliability.</strong> Plaid supports the major US institutions I needed on day one without me maintaining per-bank integrations.</li>
+    <li><strong>Webhook-driven sync.</strong> Rather than polling, Plaid pushes transaction updates, which fit a mobile app where I wanted fresh data without draining battery or hammering an API on a schedule.</li>
+    <li><strong>Compliance posture.</strong> Plaid never hands raw bank credentials to my app — it handles the OAuth/credential exchange and returns a scoped access token, which meant I wasn't storing or touching anything sensitive from the bank login itself.</li>
+  </ul>
+  <div class="callout"><strong>Trade-off:</strong> Plaid's per-connected-account pricing is real money at scale, so cost modeling directly shaped the eventual subscription price ($10/month) and became a first-class product constraint, not an afterthought.</div>
+
+  <h2><span class="num">04</span>Key technical decisions</h2>
+  <div class="grid-2">
+    <div class="card">
+      <h3>Supabase as the backend</h3>
+      <p>Postgres, Auth, and Edge Functions in one place meant I could ship webhook handlers and scheduled sync jobs (pg_cron) without standing up a separate server.</p>
+    </div>
+    <div class="card">
+      <h3>Access tokens never reach the client</h3>
+      <p>Plaid access tokens live only in Supabase Vault, accessed exclusively from Edge Functions. The mobile app never sees them.</p>
+    </div>
+    <div class="card">
+      <h3>Idempotent sync</h3>
+      <p>Transactions are upserted on a unique <code>plaid_txn_id</code>, and the sync cursor only advances after a successful write — so a failed sync can't silently drop data.</p>
+    </div>
+    <div class="card">
+      <h3>Expo + EAS for mobile</h3>
+      <p>React Native via Expo Router let me ship a native iOS experience solo, with EAS Build handling the release pipeline; a lightweight Vercel-hosted site handles the public-facing landing page.</p>
+    </div>
+  </div>
+
+  <h2><span class="num">05</span>Security &amp; privacy</h2>
+  <p>Because this touches real financial data, security constraints were treated as non-negotiable rather than nice-to-haves:</p>
+  <ul>
+    <li>Row Level Security enabled on every table — a user can only ever query their own rows, enforced at the database layer, not just in application code.</li>
+    <li>Session tokens stored in Expo SecureStore (hardware-backed keychain), never AsyncStorage.</li>
+    <li>Every Plaid webhook signature is verified before its payload is trusted.</li>
+    <li>Strict TypeScript throughout, with <code>any</code> disallowed by lint rule, to cut down on the class of bugs that comes from silently mistyped financial data.</li>
+  </ul>
+
+  <div class="divider"></div>
+
+  <h2><span class="num">06</span>Results &amp; what I learned</h2>
+  <div class="results-row">
+    <div class="stat"><span class="n">800+</span><span class="l">community members whose feedback shaped the roadmap</span></div>
+    <div class="stat"><span class="n">$10/mo</span><span class="l">target price, sized against Plaid's per-item cost</span></div>
+    <div class="stat"><span class="n">0</span><span class="l">manual spreadsheet updates since switching over</span></div>
+  </div>
+  <p>The biggest lesson wasn't technical — it was that the roadmap has to be evidence-driven before it's anything else. Reliable bank sync wasn't the feature I was most excited to build, but it was the one the community told me mattered, so it shipped first. Unit economics reinforced the same discipline: Plaid's per-connected-account pricing directly changed both the subscription price and how eagerly I could add "just one more bank." On the build side, treating security constraints (RLS, token isolation, webhook verification) as fixed requirements up front made every later feature easier to reason about, instead of retrofitting protections after the fact.</p>
+  <p class="dim">Impulse is still in active development and not yet public — this case study exists so the work is visible without exposing a production app handling real account data.</p>
+
+  <footer>
+    Built solo by Sahil Bhola · React Native (Expo), Supabase, Plaid, Vercel
+    <br>
+    <a href="../index.html#projects" class="back-link" style="margin-top: 10px;">&larr; Back to portfolio</a>
+  </footer>
+
+</div>
+</body>
+</html>
