@@ -204,7 +204,7 @@
 
   <div class="eyebrow">Case Study — Personal Project</div>
   <h1>Impulse</h1>
-  <p class="subtitle">A budgeting app that replaced my monthly Google Sheets ritual with automatic bank sync, real budgets, and zero manual data entry — built after 800+ people in my personal-finance community told me they had the same problem.</p>
+  <p class="subtitle">A budgeting app that replaced my monthly Google Sheets routine with automatic bank sync, real budgets, and zero manual data entry.</p>
 
   <div class="meta">
     <span class="tag">React Native (Expo)</span>
@@ -236,11 +236,11 @@
   </div>
 
   <h2><span class="num">01</span>The problem</h2>
-  <p>Every month I sat down with a Google Sheet, my bank's transaction export, and about an hour I didn't want to spend copy-pasting and re-categorizing purchases by hand. The spreadsheet worked, but it only worked if I kept feeding it — and I usually stopped by week three. I wanted something that pulled transactions automatically, kept a running budget by category, and required close to zero manual upkeep, while still feeling like <em>my</em> system rather than a generic budgeting app with features I'd never use.</p>
+  <p>Every month I sat down with a Google Sheet, my bank's transaction export, and about an hour I didn't want to spend copy-pasting and re-categorizing purchases by hand. The spreadsheet worked, but it only worked if I kept feeding it — and it was such a tedious process. I wanted something that pulled transactions automatically, kept a running budget by category, and required close to zero manual upkeep, while still feeling like <em>my</em> system rather than a generic budgeting app with features I'd never use.</p>
 
   <h2><span class="num">02</span>Validating it beyond myself</h2>
-  <p>Before writing any code, I'd already been posting personal-finance breakdowns as <strong>sahiltalksfinance</strong>, a content account that grew to 800+ followers. The recurring theme in comments and DMs wasn't "I want nicer charts" — it was the exact fatigue I felt myself: people falling off their budget within a few weeks because keeping it updated took real effort. That pattern, showing up across dozens of people instead of just my own habit, is what turned Impulse from a personal script into a product decision.</p>
-  <p class="dim">I treated that audience as an ongoing, lightweight research channel — engagement analytics and recurring questions standing in for user interviews — and used it to decide what shipped first. Automatic bank sync went in before custom categories, recurring-bill detection, or any of the more interesting engineering problems, because the community signal made it clear that manual entry was the actual point of failure, not the feature set sitting on top of it.</p>
+  <p>Before writing any code, I'd already been posting short-form personal-finance breakdowns on social media as <strong>sahil.bholaa</strong>, my content account. I also conducted user interviews with potential users to determine the priority of features I should implement.</p>
+  <p class="dim">I treated those interviews and my social media followers as an ongoing, lightweight research channel — engagement analytics and recurring questions — and used it to decide what shipped first. Automatic bank sync went in before custom categories, recurring-bill detection, or any of the more interesting engineering problems, because the community signal made it clear that manual entry was the actual point of failure, not the feature set sitting on top of it.</p>
 
   <h2><span class="num">03</span>Why Plaid</h2>
   <p>The core requirement was reliable, ongoing access to transaction data across whatever banks I (and eventually other users) actually use — not a one-time CSV import. Three things made Plaid the right call over building a bank-scraping solution or using a lighter-weight aggregator:</p>
@@ -249,7 +249,6 @@
     <li><strong>Webhook-driven sync.</strong> Rather than polling, Plaid pushes transaction updates, which fit a mobile app where I wanted fresh data without draining battery or hammering an API on a schedule.</li>
     <li><strong>Compliance posture.</strong> Plaid never hands raw bank credentials to my app — it handles the OAuth/credential exchange and returns a scoped access token, which meant I wasn't storing or touching anything sensitive from the bank login itself.</li>
   </ul>
-  <div class="callout"><strong>Trade-off:</strong> Plaid's per-connected-account pricing is real money at scale, so cost modeling directly shaped the eventual subscription price ($10/month) and became a first-class product constraint, not an afterthought.</div>
 
   <h2><span class="num">04</span>Key technical decisions</h2>
   <div class="grid-2">
@@ -284,13 +283,11 @@
 
   <h2><span class="num">06</span>Results &amp; what I learned</h2>
   <div class="results-row">
-    <div class="stat"><span class="n">800+</span><span class="l">community members whose feedback shaped the roadmap</span></div>
-    <div class="stat"><span class="n">$10/mo</span><span class="l">target price, sized against Plaid's per-item cost</span></div>
+    <div class="stat"><span class="n">How important</span><span class="l">user feedback is when building something for others</span></div>
+    <div class="stat"><span class="n">Confidence</span><span class="l">in being able to build something and see it go from an idea to something usable.</span></div>
     <div class="stat"><span class="n">0</span><span class="l">manual spreadsheet updates since switching over</span></div>
   </div>
-  <p>The biggest lesson wasn't technical — it was that the roadmap has to be evidence-driven before it's anything else. Reliable bank sync wasn't the feature I was most excited to build, but it was the one the community told me mattered, so it shipped first. Unit economics reinforced the same discipline: Plaid's per-connected-account pricing directly changed both the subscription price and how eagerly I could add "just one more bank." On the build side, treating security constraints (RLS, token isolation, webhook verification) as fixed requirements up front made every later feature easier to reason about, instead of retrofitting protections after the fact.</p>
   <p class="dim">Impulse is still in active development and not yet public — this case study exists so the work is visible without exposing a production app handling real account data.</p>
-
   <footer>
     Built solo by Sahil Bhola · React Native (Expo), Supabase, Plaid, Vercel
     <br>
