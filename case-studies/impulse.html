@@ -146,8 +146,8 @@
   }
   .shot-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
     padding: 8px 0 16px;
   }
   .shot-caption {
@@ -187,7 +187,8 @@
   }
   @media (max-width: 600px) {
     h1 { font-size: 30px; }
-    .grid-2, .results-row, .shot-row { grid-template-columns: 1fr; }
+    .grid-2, .results-row { grid-template-columns: 1fr; }
+    .shot-row { grid-template-columns: 1fr 1fr; }
     .wrap { padding: 32px 18px 80px; }
   }
 </style>
@@ -218,19 +219,19 @@
 
   <div class="shot-row">
     <div>
-      <div class="shot"><img src="../assets/case-studies/impulse/home.webp" width="1600" height="770" alt="Impulse home dashboard showing total monthly budget, connect-a-bank prompt, and budget categories" loading="lazy"></div>
+      <div class="shot"><img src="../assets/case-studies/impulse/home.webp" width="800" height="1740" alt="Impulse home dashboard showing total monthly budget, connect-a-bank prompt, and budget categories" loading="lazy"></div>
       <div class="shot-caption">Home — budget overview</div>
     </div>
     <div>
-      <div class="shot"><img src="../assets/case-studies/impulse/transactions.webp" width="1600" height="772" alt="Impulse transactions screen with month selector, search, and category filters" loading="lazy"></div>
+      <div class="shot"><img src="../assets/case-studies/impulse/transactions.webp" width="800" height="1740" alt="Impulse transactions screen with month selector, search, and category filters" loading="lazy"></div>
       <div class="shot-caption">Transactions — search &amp; filter</div>
     </div>
     <div>
-      <div class="shot"><img src="../assets/case-studies/impulse/accounts.webp" width="1600" height="770" alt="Impulse accounts screen with linked institutions and link-a-bank action" loading="lazy"></div>
+      <div class="shot"><img src="../assets/case-studies/impulse/accounts.webp" width="800" height="1740" alt="Impulse accounts screen with linked institutions and link-a-bank action" loading="lazy"></div>
       <div class="shot-caption">Accounts — linked institutions</div>
     </div>
     <div>
-      <div class="shot"><img src="../assets/case-studies/impulse/settings.webp" width="1600" height="774" alt="Impulse settings screen with account info, notification preferences, and sign out" loading="lazy"></div>
+      <div class="shot"><img src="../assets/case-studies/impulse/settings.webp" width="800" height="1740" alt="Impulse settings screen with account info, notification preferences, and sign out" loading="lazy"></div>
       <div class="shot-caption">Settings — account &amp; preferences</div>
     </div>
   </div>
