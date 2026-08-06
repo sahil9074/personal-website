@@ -328,15 +328,105 @@ main {
 
 .project-card--featured {
     border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
 }
 
-.project-thumb {
+.project-visual {
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 2.5rem 1.5rem;
+    background: var(--bg-light);
+    align-self: stretch;
+    justify-content: center;
+}
+
+.phone-frame {
+    position: relative;
+    width: 220px;
+    aspect-ratio: 800 / 1740;
+    background: #111318;
+    border-radius: 34px;
+    padding: 10px;
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.35), inset 0 0 0 2px rgba(255, 255, 255, 0.06);
+}
+
+.phone-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #0a0e16;
+}
+
+.phone-screen-img {
     display: block;
     width: 100%;
-    height: auto;
-    aspect-ratio: 1600 / 770;
+    height: 100%;
     object-fit: cover;
-    background: var(--bg-light);
+    opacity: 1;
+    transition: opacity 200ms ease;
+}
+
+.phone-screen-img.is-fading {
+    opacity: 0;
+}
+
+.phone-notch {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36%;
+    height: 16px;
+    background: #111318;
+    border-radius: 10px;
+    z-index: 2;
+}
+
+.phone-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.phone-dot {
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.phone-dot::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    opacity: 0.45;
+    transition: background-color 200ms ease, opacity 200ms ease, transform 200ms ease;
+}
+
+.phone-dot.is-active::before {
+    background: var(--primary-color);
+    opacity: 1;
+    transform: scale(1.3);
+}
+
+.phone-dot:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
 }
 
 .project-content {
@@ -612,9 +702,19 @@ main {
     .projects-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .container {
         padding: 0 1rem;
+    }
+
+    .project-card--featured {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .project-visual {
+        flex: none;
+        width: 100%;
     }
 }
 

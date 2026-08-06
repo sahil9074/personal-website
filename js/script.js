@@ -134,3 +134,65 @@ document.addEventListener('DOMContentLoaded', () => {
         // typeWriter(titleElement, originalText, 100);
     }
 });
+
+// Impulse project card — phone screenshot carousel
+document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.getElementById('impulse-carousel');
+    const img = document.getElementById('impulse-carousel-img');
+    if (!carousel || !img) return;
+
+    const dots = carousel.querySelectorAll('.phone-dot');
+    const screens = [
+        { src: 'assets/case-studies/impulse/home.webp', alt: 'Impulse budgeting app home dashboard showing total monthly budget and categories' },
+        { src: 'assets/case-studies/impulse/transactions.webp', alt: 'Impulse transactions screen with month selector, search, and category filters' },
+        { src: 'assets/case-studies/impulse/accounts.webp', alt: 'Impulse accounts screen with linked institutions' },
+        { src: 'assets/case-studies/impulse/settings.webp', alt: 'Impulse settings screen with account info and preferences' }
+    ];
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let activeIndex = 0;
+    let timer = null;
+
+    function showScreen(index) {
+        activeIndex = index;
+        img.classList.add('is-fading');
+        setTimeout(() => {
+            img.src = screens[index].src;
+            img.alt = screens[index].alt;
+            img.classList.remove('is-fading');
+        }, 200);
+
+        dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index));
+    }
+
+    function goToNext() {
+        showScreen((activeIndex + 1) % screens.length);
+    }
+
+    function startAutoplay() {
+        if (prefersReducedMotion) return;
+        stopAutoplay();
+        timer = setInterval(goToNext, 3500);
+    }
+
+    function stopAutoplay() {
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+        }
+    }
+
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+            showScreen(i);
+            startAutoplay();
+        });
+    });
+
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', startAutoplay);
+    carousel.addEventListener('focusin', stopAutoplay);
+    carousel.addEventListener('focusout', startAutoplay);
+
+    startAutoplay();
+});
