@@ -75,15 +75,25 @@
                 <h2 class="section-title">My Work</h2>
                 <div class="projects-grid projects-grid--single">
                     <div class="project-card project-card--featured">
-                        <div class="project-image">
-                            <img src="assets/case-studies/impulse/home.webp" width="1600" height="770" alt="Impulse budgeting app home dashboard showing total monthly budget and categories" loading="lazy" class="project-thumb">
+                        <div class="project-visual" id="impulse-carousel">
+                            <div class="phone-frame">
+                                <div class="phone-notch"></div>
+                                <div class="phone-screen">
+                                    <img src="assets/case-studies/impulse/home.webp" width="800" height="1740" alt="Impulse budgeting app home dashboard showing total monthly budget and categories" loading="lazy" class="phone-screen-img" id="impulse-carousel-img">
+                                </div>
+                            </div>
+                            <div class="phone-dots" role="tablist" aria-label="Impulse app screens">
+                                <button type="button" class="phone-dot is-active" aria-label="Home dashboard"></button>
+                                <button type="button" class="phone-dot" aria-label="Transactions"></button>
+                                <button type="button" class="phone-dot" aria-label="Accounts"></button>
+                                <button type="button" class="phone-dot" aria-label="Settings"></button>
+                            </div>
                         </div>
                         <div class="project-content">
                             <h3 class="project-title">Impulse — Budgeting App</h3>
                             <p class="project-description">
                                 A budgeting app that replaced my monthly Google Sheets ritual with automatic bank sync via Plaid,
-                                real category budgets, and zero manual data entry. I use direct community research — not
-                                guesswork — to define the roadmap, and built the whole thing solo, end to end.
+                                real category budgets, and zero manual data entry. I used user research/interviews to define the roadmap as well as what features to prioritize, and built the whole thing solo, end to end.
                             </p>
                             <div class="project-tech">
                                 <span class="tech-tag">React Native (Expo)</span>
